@@ -12,6 +12,6 @@ unzip /tmp/frontend.zip
 echo -e "\e[33mSetup Reverse proxy\e[0m"
 cp /home/centos/roboshop3-shell/frontend.conf /etc/nginx/default.d/roboshop.conf
 
-echo -e "\e[33mStart Nginx server\e[0m"
+echo -e "\e[33mStart Nginx Server\e[0m"
 systemctl enable nginx
 systemctl restart nginx
