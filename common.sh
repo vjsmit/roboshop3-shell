@@ -43,25 +43,25 @@ func_systemd_setup() {
 
 func_nodejs() {
   echo -e "${color}Enable Nodejs18${nocolor}"
-  dnf module disable nodejs -y
-  dnf module enable nodejs:18 -y
+  dnf module disable nodejs -y    &>>{logfile}
+  dnf module enable nodejs:18 -y    &>>{logfile}
   
   echo -e "${color}Install Nodejs${nocolor}"
-  dnf install nodejs -y
+  dnf install nodejs -y   &>>{logfile}
   
   func_app_presetup
 
   echo -e "${color}Download App Dependencies${nocolor}"
-  npm install
+  npm install   &>>{logfile}
   
   func_systemd_setup
 }
 
 func_schema() {
   echo -e "${color}Install Mongodb client${nocolor}"
-  dnf install mongodb-org-shell -y
+  dnf install mongodb-org-shell -y    &>>{logfile}
 
   echo -e "${color}Load Schema${nocolor}"
-  mongo --host mongodb-dev.smitdevops.online </app/schema/catalogue.js
+  mongo --host mongodb-dev.smitdevops.online </app/schema/catalogue.js    &>>{logfile}
 
 }
