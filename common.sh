@@ -99,3 +99,17 @@ func_python() {
 
   func_systemd_setup
 }
+
+func_golang() {
+  echo -e "${color}Install golang${nocolor}"
+  dnf install golang -y   &>>{logfile}
+
+  func_app_presetup
+
+  echo -e "${color}Download App Dependencies${nocolor}"
+  go mod init dispatch    &>>{logfile}
+  go get    &>>{logfile}
+  go build    &>>{logfile}
+
+  func_systemd_Setup
+}
