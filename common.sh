@@ -71,19 +71,19 @@ func_schema() {
 
 func_maven() {
   echo -e "${color}Install Maven${nocolor}"
-  dnf install maven -y
+  dnf install maven -y    &>>${logfile}
 
   func_app_presetup
 
   echo -e "${color}Download App Dependencies${nocolor}"
-  mvn clean package
-  mv target/shipping-1.0.jar shipping.jar
+  mvn clean package   &>>${logfile}
+  mv target/shipping-1.0.jar shipping.jar   &>>${logfile}
 
   echo -e "${color}Install mysql client${nocolor}"
-  dnf install mysql -y
+  dnf install mysql -y    &>>${logfile}
 
   echo -e "${color}Load Schema${nocolor}"
-  mysql -h mysql-dev.smitdevops.online -uroot -pRoboShop@1 </app/schema/shipping.sql
+  mysql -h mysql-dev.smitdevops.online -uroot -pRoboShop@1 </app/schema/shipping.sql    &>>${logfile}
 
   func_systemd_setup
 }
