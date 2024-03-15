@@ -34,27 +34,13 @@ func_systemd_setup() {
   echo -e "${color}Setup ${component} service${nocolor}"
   cp /home/centos/roboshop3-shell/${component}.service /etc/systemd/system/${component}.service   &>>${logfile}
 
+  sed -i -e "s/rabbitmq_pwd/${rabbitmq_pwd}/" /etc/systemd/system/${component}.service    &>>${logfile}
+
   echo -e "${color}Start ${component} Service${nocolor}"
   systemctl daemon-reload   &>>{logfile}
   systemctl enable ${component}   &>>${logfile}
   systemctl restart ${component}    &>>${logfile}
 
-}
-
-func_nodejs() {
-  echo -e "${color}Enable Nodejs18${nocolor}"
-  dnf module disable nodejs -y    &>>${logfile}
-  dnf module enable nodejs:18 -y    &>>${logfile}
-  
-  echo -e "${color}Install Nodejs${nocolor}"
-  dnf install nodejs -y   &>>${logfile}
-  
-  func_app_presetup
-
-  echo -e "${color}Download App Dependencies${nocolor}"
-  npm install   &>>${logfile}
-  
-  func_systemd_setup
 }
 
 func_schema() {
@@ -69,6 +55,30 @@ func_schema() {
 
 }
 
+func_mysql() {
+  echo -e "${color}Install mysql client${nocolor}"
+  dnf install mysql -y    &>>${logfile}
+
+  echo -e "${color}Load Schema${nocolor}"
+  mysql -h mysql-dev.smitdevops.online -uroot -p${mysql_pwd} </app/schema/shipping.sql    &>>${logfile}
+}
+
+func_nodejs() {
+  echo -e "${color}Enable Nodejs18${nocolor}"
+  dnf module disable nodejs -y    &>>${logfile}
+  dnf module enable nodejs:18 -y    &>>${logfile}
+
+  echo -e "${color}Install Nodejs${nocolor}"
+  dnf install nodejs -y   &>>${logfile}
+
+  func_app_presetup
+
+  echo -e "${color}Download App Dependencies${nocolor}"
+  npm install   &>>${logfile}
+
+  func_systemd_setup
+}
+
 func_maven() {
   echo -e "${color}Install Maven${nocolor}"
   dnf install maven -y    &>>${logfile}
@@ -79,11 +89,7 @@ func_maven() {
   mvn clean package   &>>${logfile}
   mv target/shipping-1.0.jar shipping.jar   &>>${logfile}
 
-  echo -e "${color}Install mysql client${nocolor}"
-  dnf install mysql -y    &>>${logfile}
-
-  echo -e "${color}Load Schema${nocolor}"
-  mysql -h mysql-dev.smitdevops.online -uroot -pRoboShop@1 </app/schema/shipping.sql    &>>${logfile}
+  func_mysql
 
   func_systemd_setup
 }

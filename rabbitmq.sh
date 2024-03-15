@@ -1,4 +1,10 @@
 source common.sh
+rabbitmq_pwd=$1
+
+if [ -z "$rabbitmq_pwd" ]; then
+    echo Please enter rabbitmq pwd
+    exit 1
+fi
 
 echo -e "${color}Setup Erlang repo${nocolor}"
 curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | bash     &>>${logfile}
@@ -14,5 +20,5 @@ systemctl enable rabbitmq-server    &>>${logfile}
 systemctl restart rabbitmq-server   &>>${logfile}
 
 echo -e "${color}Create user for the app${nocolor}"
-rabbitmqctl add_user roboshop roboshop123   &>>${logfile}
+rabbitmqctl add_user roboshop ${rabbitmq_pwd}   &>>${logfile}
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"    &>>${logfile}
