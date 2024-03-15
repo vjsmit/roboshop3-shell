@@ -68,3 +68,22 @@ func_schema() {
   mongo --host mongodb-dev.smitdevops.online </app/schema/catalogue.js    &>>${logfile}
 
 }
+
+func_maven() {
+  echo -e "${color}Install Maven${nocolor}"
+  dnf install maven -y
+
+  func_app_presetup
+
+  echo -e "${color}Download App Dependencies${nocolor}"
+  mvn clean package
+  mv target/shipping-1.0.jar shipping.jar
+
+  echo -e "${color}Install mysql client${nocolor}"
+  dnf install mysql -y
+
+  echo -e "${color}Load Schema${nocolor}"
+  mysql -h mysql-dev.smitdevops.online -uroot -pRoboShop@1 </app/schema/shipping.sql
+
+  func_systemd_setup
+}
