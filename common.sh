@@ -3,9 +3,9 @@ nocolor="\e[0m"
 
 logfile="/tmp/roboshop.log"
 
-id
+user_id=$(id -u)
 
-if [ id -ne 0 ]; then
+if [ ${user_id} -ne 0 ]; then
     echo "Login as a root user, exitinf script"
     exit 1
 fi
