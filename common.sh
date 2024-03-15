@@ -87,3 +87,15 @@ func_maven() {
 
   func_systemd_setup
 }
+
+func_python() {
+  echo -e "${color}Install Python${nocolor}"
+  dnf install python36 gcc python3-devel -y     &>>${logfile}
+
+  func_app_presetup
+
+  echo -e "${color}Install App Dependencies${nocolor}"
+  pip3.6 install -r requirements.txt      &>>${logfile}
+
+  func_systemd_setup
+}
