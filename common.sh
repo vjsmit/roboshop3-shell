@@ -12,9 +12,9 @@ fi
 
 func_app_presetup() {
   echo -e "${color}Add App User${nocolor}"
-  id roboshop
+  id roboshop   &>>{logfile}
   if [ $? -ne 0 ]; then
-    useradd roboshop
+    useradd roboshop    &>>{logfile}
   fi
 
   echo -e "${color}Create App Dir${nocolor}"
@@ -22,22 +22,22 @@ func_app_presetup() {
   mkdir /app
 
   echo -e "${color}Download App content${nocolor}"
-  curl -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip
+  curl -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip    &>>{logfile}
 
   echo -e "${color}Unzip App content${nocolor}"
   cd /app
-  unzip /tmp/${component}.zip
+  unzip /tmp/${component}.zip   &>>{logfile}
 
 }
 
 func_systemd_setup() {
   echo -e "${color}Setup ${component} service${nocolor}"
-  cp /home/centos/roboshop3-shell/${component}.service /etc/systemd/system/${component}.service
+  cp /home/centos/roboshop3-shell/${component}.service /etc/systemd/system/${component}.service   &>>{logfile}
 
   echo -e "${color}Start ${component} Service${nocolor}"
-  systemctl daemon-reload
-  systemctl enable ${component}
-  systemctl restart ${component}
+  systemctl daemon-reload   &>>{logfile}
+  systemctl enable ${component}   &>>{logfile}
+  systemctl restart ${component}    &>>{logfile}
 
 }
 
